@@ -1,68 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useContact } from '../hooks/useContact';
 
 export function ContactView() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: 'General Inquiry',
-    message: '',
-  });
-
-  const [status, setStatus] = useState('idle'); // 'idle' | 'submitting' | 'success' | 'error'
-  const [errors, setErrors] = useState({});
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error for this field if any
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: '',
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const tempErrors = {};
-    if (!formData.name.trim()) tempErrors.name = 'Full name is required';
-    if (!formData.email.trim()) {
-      tempErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = 'Please enter a valid email address';
-    }
-    if (!formData.message.trim()) tempErrors.message = 'Message is required';
-    
-    setErrors(tempErrors);
-    return Object.keys(tempErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setStatus('submitting');
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        subject: 'General Inquiry',
-        message: '',
-      });
-    } catch (err) {
-      setStatus('error');
-    }
-  };
+  const {
+    formData,
+    status,
+    errors,
+    handleInputChange,
+    handleSubmit,
+    resetFormStatus,
+  } = useContact();
 
   return (
     <div className="pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pt-12">
@@ -174,7 +123,7 @@ export function ContactView() {
                   </p>
                 </div>
                 <button
-                  onClick={() => setStatus('idle')}
+                  onClick={resetFormStatus}
                   className="bg-primary text-on-primary px-8 py-3 rounded-xl font-button hover:opacity-90 active:scale-95 transition-all"
                 >
                   Send Another Message
