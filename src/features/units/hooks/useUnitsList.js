@@ -33,13 +33,13 @@ export const useUnitsList = (initialParams = {}) => {
         fetchUnits(params);
     }, [params, fetchUnits]);
 
-    const changePage = (page) => {
+    const changePage = useCallback((page) => {
         setParams(prev => ({ ...prev, page }));
-    };
+    }, []);
 
-    const updateFilters = (newFilters) => {
+    const updateFilters = useCallback((newFilters) => {
         setParams({ ...newFilters, page: 1 });
-    };
+    }, []);
 
     return {
         units,

@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function UnitsFilterBar({ onOpenAdvancedFilter }) {
+const UNIT_TYPES = ['All', 'apartment', 'studio', 'villa', 'office', 'house', 'shop', 'duplex', 'penthouse', 'town_house', 'land', 'warehouse'];
+
+export default function UnitsFilterBar({ onOpenAdvancedFilter, filters, onFilterChange }) {
     return (
         <section className="sticky top-20 z-40 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 py-4">
             <div className="max-w-container-max mx-auto px-margin-desktop flex flex-wrap lg:flex-nowrap items-center gap-4">
@@ -11,30 +13,24 @@ export default function UnitsFilterBar({ onOpenAdvancedFilter }) {
                         className="w-full bg-white border border-outline-variant rounded-xl pl-12 pr-4 py-3 focus:ring-primary focus:border-primary" 
                         placeholder="Search location, neighborhood, or ZIP" 
                         type="text"
+                        value={filters?.search || ''}
+                        onChange={(e) => onFilterChange('search', e.target.value)}
                     />
                 </div>
                 
                 {/* Dropdowns */}
                 <div className="flex flex-wrap items-center gap-3">
                     <div className="relative group">
-                        <button className="flex items-center gap-2 px-4 py-3 bg-white border border-outline-variant rounded-xl text-body-md hover:border-primary transition-all">
-                            Property Type
-                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                        </button>
-                    </div>
-                    
-                    <div className="relative group">
-                        <button className="flex items-center gap-2 px-4 py-3 bg-white border border-outline-variant rounded-xl text-body-md hover:border-primary transition-all">
-                            Price Range
-                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                        </button>
-                    </div>
-                    
-                    <div className="relative group">
-                        <button className="flex items-center gap-2 px-4 py-3 bg-white border border-outline-variant rounded-xl text-body-md hover:border-primary transition-all">
-                            Bedrooms
-                            <span className="material-symbols-outlined text-[18px]">expand_more</span>
-                        </button>
+                        <select 
+                            className="flex items-center gap-2 px-4 py-3 bg-white border border-outline-variant rounded-xl text-body-md hover:border-primary transition-all appearance-none pr-10 cursor-pointer capitalize"
+                            value={filters?.type || 'All'}
+                            onChange={(e) => onFilterChange('type', e.target.value)}
+                        >
+                            {UNIT_TYPES.map(type => (
+                                <option key={type} value={type}>{type.replace('_', ' ')}</option>
+                            ))}
+                        </select>
+                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[18px] pointer-events-none text-outline">expand_more</span>
                     </div>
                     
                     <button 
@@ -42,7 +38,10 @@ export default function UnitsFilterBar({ onOpenAdvancedFilter }) {
                         onClick={onOpenAdvancedFilter}
                     >
                         <span className="material-symbols-outlined text-[18px]">tune</span>
-                        More Filters
+                        Advanced Filters
+                        {((filters?.min_price || filters?.max_price || (filters?.bedrooms && filters.bedrooms !== 'Any') || filters?.amenities?.length > 0) && (
+                            <span className="bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center ml-1">!</span>
+                        ))}
                     </button>
                 </div>
                 
@@ -61,11 +60,14 @@ export default function UnitsFilterBar({ onOpenAdvancedFilter }) {
                         </button>
                     </div>
                     
-                    <select className="bg-transparent border-none text-body-md font-semibold focus:ring-0 text-on-surface-variant cursor-pointer">
-                        <option>Newest First</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                        <option>Top Rated</option>
+                    <select 
+                        className="bg-transparent border-none text-body-md font-semibold focus:ring-0 text-on-surface-variant cursor-pointer"
+                        value={filters?.sort || 'newest_to_oldest'}
+                        onChange={(e) => onFilterChange('sort', e.target.value)}
+                    >
+                        <option value="newest_to_oldest">Newest First</option>
+                        <option value="oldest_to_newest">Oldest First</option>
+                        <option value="top_rated">Top Rated</option>
                     </select>
                 </div>
             </div>

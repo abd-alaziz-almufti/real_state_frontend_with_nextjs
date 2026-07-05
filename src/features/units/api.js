@@ -15,5 +15,8 @@ export const UnitsApi = {
   },
   getById: async (id) => {
     return api.get(`units/${id}`);
+  },
+  rate: async (id, data) => {
+    return api.post(`units/${id}/rate`, data);
   }
 };
