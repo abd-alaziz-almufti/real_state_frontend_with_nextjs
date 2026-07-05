@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import React from "react"; 
+import React from "react";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {
@@ -9,13 +9,13 @@ export default function Navbar() {
 
   const getLinkClass = (path) => {
     const isActive = pathname === path;
-    return isActive 
+    return isActive
       ? "text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary font-semibold pb-1"
       : "text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-inverse-primary transition-colors pb-1";
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20 max-w-container-max mx-auto bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none">
+    <header className="fixed top-0 left-0 right-0 min-w-full z-50 flex justify-between items-center px-margin-desktop h-20 max-w-container-max mx-auto bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-b border-outline-variant/30 dark:border-outline/20 shadow-sm dark:shadow-none">
       <div className="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-inverse-primary">
         <Link href="/">EstateSync Pro</Link>
       </div>
@@ -23,7 +23,7 @@ export default function Navbar() {
         <Link className={getLinkClass('/')} href="/">Marketplace</Link>
         <a className={getLinkClass('/map-explorer')} href="#">Map Explorer</a>
         <a className={getLinkClass('/tenant-portal')} href="#">Tenant Portal</a>
-        <Link className={getLinkClass('/agencies')} href="/agencies">Agencies</Link>
+        <a className={getLinkClass('/agencies')} href="#">Agencies</a>
         <Link className={getLinkClass('/contact')} href="/contact">Contact</Link>
       </nav>
       <div className="flex items-center gap-4">

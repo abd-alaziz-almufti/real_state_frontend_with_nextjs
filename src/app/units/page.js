@@ -7,21 +7,44 @@ import {
     UnitExploreCard
 } from '@/features/units';
 import Pagination from '@/components/Pagination';
+
 export default function UnitsPage() {
-    const { units, meta, loading, error, changePage } = useUnitsList({ page: 1 });
+    const [filters, setFilters] = useState({
+        search: '',
+        type: 'All',
+        min_price: '',
+        max_price: '',
+        bedrooms: 'Any',
+        sort: 'newest_to_oldest',
+        amenities: []
+    });
+
+    const { units, meta, loading, error, changePage, updateFilters } = useUnitsList({ page: 1, ...filters });
     const [isAdvancedFilterOpen, setIsAdvancedFilterOpen] = useState(false);
+
+    // Apply filters whenever they change
+    useEffect(() => {
+        updateFilters(filters);
+    }, [filters, updateFilters]);
+
     // Close advanced filter when clicking outside (on desktop) or pressing Esc
     useEffect(() => {
-        console.log('units', units);
-        console.log('meta', meta);
-        console.log('loading', loading);
-        console.log('error', error);
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') setIsAdvancedFilterOpen(false);
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
+
+    const handleFilterChange = (key, value) => {
+        setFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleApplyAdvancedFilters = (advancedFilters) => {
+        setFilters(prev => ({ ...prev, ...advancedFilters }));
+        setIsAdvancedFilterOpen(false);
+    };
+
     return (
         <div className="min-h-screen bg-background relative">
             {/* Overlay for Sidebar */}
@@ -31,7 +54,11 @@ export default function UnitsPage() {
                     onClick={() => setIsAdvancedFilterOpen(false)}
                 ></div>
             )}
-            <UnitsFilterBar onOpenAdvancedFilter={() => setIsAdvancedFilterOpen(true)} />
+            <UnitsFilterBar 
+                filters={filters} 
+                onFilterChange={handleFilterChange} 
+                onOpenAdvancedFilter={() => setIsAdvancedFilterOpen(true)} 
+            />
             <div className="max-w-container-max mx-auto px-margin-desktop py-12 flex gap-gutter relative z-0">
                 <div className="flex-1 w-full">
                     {/* Header */}
@@ -92,6 +119,8 @@ export default function UnitsPage() {
             <UnitsAdvancedFilter
                 isOpen={isAdvancedFilterOpen}
                 onClose={() => setIsAdvancedFilterOpen(false)}
+                filters={filters}
+                onApplyFilters={handleApplyAdvancedFilters}
             />
         </div>
     );
