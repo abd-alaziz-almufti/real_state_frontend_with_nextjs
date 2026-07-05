@@ -25,6 +25,8 @@ export default function Navbar() {
         <a className={getLinkClass('/tenant-portal')} href="#">Tenant Portal</a>
         <a className={getLinkClass('/agencies')} href="#">Agencies</a>
         <Link className={getLinkClass('/contact')} href="/contact">Contact</Link>
+        <Link className={getLinkClass('/about')} href="/about">About</Link>
+
       </nav>
       <div className="flex items-center gap-4">
         {/* <button 
