@@ -202,7 +202,7 @@ export default function AgencyDetailPage({ params }) {
                   </div>
                   
                   <Link 
-                    href={`/units`} 
+                    href={`/units/${property.id}`} 
                     className="w-full py-4 bg-primary text-white font-button rounded-lg hover:bg-primary-fixed-dim hover:text-on-primary-fixed transition-colors flex items-center justify-center"
                   >
                     View Details
