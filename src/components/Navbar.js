@@ -1,11 +1,15 @@
 'use client';
 
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, isAuthenticated, logout, loading } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
 
   const getLinkClass = (path) => {
     const isActive = pathname === path;
@@ -19,26 +23,75 @@ export default function Navbar() {
       <div className="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-inverse-primary">
         <Link href="/">EstateSync Pro</Link>
       </div>
+
       <nav className="hidden md:flex items-center gap-8">
         <Link className={getLinkClass('/')} href="/">Marketplace</Link>
         <a className={getLinkClass('/map-explorer')} href="#">Map Explorer</a>
-        <a className={getLinkClass('/tenant-portal')} href="#">Tenant Portal</a>
         <Link className={getLinkClass('/agencies')} href="/agencies">Agencies</Link>
         <Link className={getLinkClass('/contact')} href="/contact">Contact</Link>
         <Link className={getLinkClass('/about')} href="/about">About</Link>
-
+        {isAuthenticated && (
+          <Link className={getLinkClass('/tenant/dashboard')} href="/tenant/dashboard">
+            My Portal
+          </Link>
+        )}
       </nav>
-      <div className="flex items-center gap-4">
-        {/* <button 
-          onClick={() => setDarkMode(!darkMode)}
+
+      <div className="flex items-center gap-3">
+        <button
           className="material-symbols-outlined text-on-surface-variant dark:text-surface-variant p-2 hover:bg-surface-container-high/50 rounded-lg transition-all"
-          aria-label="Toggle Theme"
+          aria-label="Notifications"
         >
-          {darkMode ? 'light_mode' : 'dark_mode'}
-        </button> */}
-        <button className="material-symbols-outlined text-on-surface-variant dark:text-surface-variant p-2 hover:bg-surface-container-high/50 rounded-lg transition-all">notifications</button>
-        <button className="material-symbols-outlined text-on-surface-variant dark:text-surface-variant p-2 hover:bg-surface-container-high/50 rounded-lg transition-all">apps</button>
-        <button className="bg-primary text-on-primary px-6 py-2 rounded-xl font-button text-button hover:opacity-90 active:scale-95 transition-all">List Property</button>
+          notifications
+        </button>
+
+        {loading ? (
+          // Skeleton while auth initializes
+          <div className="w-24 h-9 rounded-xl bg-surface-container animate-pulse" />
+        ) : isAuthenticated ? (
+          <div className="flex items-center gap-2">
+            {/* Avatar + name */}
+            <Link
+              href="/tenant/dashboard"
+              id="navbar-dashboard-link"
+              className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl transition-all hover:bg-surface-container"
+            >
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ background: 'linear-gradient(135deg, #4f46e5, #6366f1)', color: '#fff' }}
+              >
+                {user?.name?.charAt(0)?.toUpperCase() || 'T'}
+              </div>
+              <span className="text-sm font-semibold text-on-surface">{user?.name?.split(' ')[0]}</span>
+            </Link>
+            <button
+              id="navbar-logout-btn"
+              onClick={logout}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all hover:opacity-80"
+              style={{ background: '#fef2f2', color: '#dc2626' }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>logout</span>
+              <span className="hidden md:inline">Sign Out</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2">
+            <Link
+              id="navbar-login-link"
+              href="/login"
+              className="px-4 py-2 rounded-xl text-sm font-semibold text-on-surface-variant hover:bg-surface-container transition-all"
+            >
+              Sign In
+            </Link>
+            <Link
+              id="navbar-register-link"
+              href="/register"
+              className="bg-primary text-on-primary px-5 py-2 rounded-xl font-button text-button hover:opacity-90 active:scale-95 transition-all"
+            >
+              Get Started
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );
