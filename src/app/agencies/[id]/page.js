@@ -160,56 +160,64 @@ export default function AgencyDetailPage({ params }) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-            {agency.inventory && agency.inventory.map((property) => (
-              <div 
-                key={property.id} 
-                className="bg-white rounded-xl overflow-hidden hover-lift border border-outline-variant/20 shadow-sm"
-              >
-                <div className="relative h-64">
-                  <img 
-                    className="w-full h-full object-cover" 
-                    alt={`Property ${property.title}`} 
-                    src={property.image}
-                  />
-                  <div className="absolute top-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded text-label-caps font-label-caps">
-                    {property.status}
-                  </div>
-                  <button className="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/40 transition-colors">
-                    <span className="material-symbols-outlined">favorite</span>
-                  </button>
-                </div>
-                
-                <div className="p-6 space-y-4">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-headline-md text-headline-md text-on-background">{property.title}</h3>
-                    <span className="text-primary font-headline-md text-headline-md">{property.price}</span>
-                  </div>
-                  <p className="text-outline text-body-md">{property.address}</p>
-                  
-                  <div className="flex items-center gap-6 py-2 border-y border-outline-variant/20">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-outline">bed</span>
-                      <span className="font-label-caps text-label-caps uppercase">{property.beds} BEDS</span>
+            {agency.inventory && agency.inventory.length > 0 ? (
+              agency.inventory.map((property) => (
+                <div 
+                  key={property.id} 
+                  className="bg-white rounded-xl overflow-hidden hover-lift border border-outline-variant/20 shadow-sm"
+                >
+                  <div className="relative h-64">
+                    <img 
+                      className="w-full h-full object-cover" 
+                      alt={`Property ${property.title}`} 
+                      src={property.image}
+                    />
+                    <div className="absolute top-4 left-4 bg-secondary-container text-on-secondary-container px-3 py-1 rounded text-label-caps font-label-caps">
+                      {property.status}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-outline">bathtub</span>
-                      <span className="font-label-caps text-label-caps uppercase">{property.baths} BATHS</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-outline">square_foot</span>
-                      <span className="font-label-caps text-label-caps uppercase">{property.sqft} SQFT</span>
-                    </div>
+                    <button className="absolute top-4 right-4 bg-white/20 backdrop-blur-md text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/40 transition-colors">
+                      <span className="material-symbols-outlined">favorite</span>
+                    </button>
                   </div>
                   
-                  <Link 
-                    href={`/units/${property.id}`} 
-                    className="w-full py-4 bg-primary text-white font-button rounded-lg hover:bg-primary-fixed-dim hover:text-on-primary-fixed transition-colors flex items-center justify-center"
-                  >
-                    View Details
-                  </Link>
+                  <div className="p-6 space-y-4">
+                    <div className="flex justify-between items-start">
+                      <h3 className="font-headline-md text-headline-md text-on-background">{property.title}</h3>
+                      <span className="text-primary font-headline-md text-headline-md">{property.price}</span>
+                    </div>
+                    <p className="text-outline text-body-md">{property.address}</p>
+                    
+                    <div className="flex items-center gap-6 py-2 border-y border-outline-variant/20">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-outline">bed</span>
+                        <span className="font-label-caps text-label-caps uppercase">{property.beds} BEDS</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-outline">bathtub</span>
+                        <span className="font-label-caps text-label-caps uppercase">{property.baths} BATHS</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-outline">square_foot</span>
+                        <span className="font-label-caps text-label-caps uppercase">{property.sqft} SQFT</span>
+                      </div>
+                    </div>
+                    
+                    <Link 
+                      href={`/units/${property.id}`} 
+                      className="w-full py-4 bg-primary text-white font-button rounded-lg hover:bg-primary-fixed-dim hover:text-on-primary-fixed transition-colors flex items-center justify-center"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
+              ))
+            ) : (
+              <div className="col-span-full py-16 px-4 text-center bg-white rounded-2xl border border-outline-variant/20 shadow-sm flex flex-col items-center justify-center">
+                <span className="material-symbols-outlined text-[48px] text-outline mb-4">holiday_village</span>
+                <h4 className="text-headline-md text-on-surface mb-2">No units available</h4>
+                <p className="text-on-surface-variant max-w-sm">This company does not have any active units listed in its inventory right now.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
