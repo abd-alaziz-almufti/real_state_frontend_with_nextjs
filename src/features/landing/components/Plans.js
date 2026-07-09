@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { usePlans } from '../hooks/usePlans';
 
 const formatPrice = (price) => {
@@ -73,7 +74,7 @@ export const Plans = () => {
                             <div className="space-y-2">
                                 <h3 className="text-headline-md font-headline-md">{plan.name}</h3>
                                 <div className="flex items-baseline gap-1">
-                                    <span className="text-headline-xl font-headline-xl">{  formatPrice(plan.price)}</span>
+                                    <span className="text-headline-xl font-headline-xl">{formatPrice(plan.price)}</span>
                                     <span className={`font-body-md ${isRecommended ? 'text-on-surface' : 'text-on-surface-variant'}`}>
                                         /{plan.billing_cycle || 'mo'}
                                     </span>
@@ -87,8 +88,8 @@ export const Plans = () => {
                                 {featureItems.map((feature) => {
                                     const isNotIncluded = feature.value === false;
                                     const iconName = isNotIncluded ? 'close' : 'check_circle';
-                                    const iconColor = isNotIncluded 
-                                        ? 'text-outline' 
+                                    const iconColor = isNotIncluded
+                                        ? 'text-outline'
                                         : (isRecommended ? 'text-secondary' : 'text-primary');
 
                                     return (
@@ -107,7 +108,7 @@ export const Plans = () => {
                                                 {feature.label}: {
                                                     (
                                                         (feature.key === "max_properties" ||
-                                                        feature.key === "max_units") &&
+                                                            feature.key === "max_units") &&
                                                         feature.value > 500
                                                     )
                                                         ? "Unlimited"
@@ -124,8 +125,18 @@ export const Plans = () => {
                                     ? 'bg-primary text-on-primary shadow-lg shadow-primary/30 hover:opacity-90'
                                     : 'border-2 border-primary text-primary hover:bg-primary/5'}`}
                             >
-                                {isRecommended ? 'Start 14-Day Free Trial' : `Select ${plan.name}`}
+                                {`Select ${plan.name}`}
                             </button>
+                            {isRecommended && (
+                                <Link href="/register/agency">
+                                    <div
+                                        className={` text-[white] bg-[#FF8C00] text-center w-full py-4 rounded-xl font-button transition-all`}
+                                    >
+                                        {isRecommended ? 'Start 14-Day Free Trial' : `Select ${plan.name}`}
+                                    </div>
+                                </Link>
+                            )}
+
                         </div>
                     );
                 })}

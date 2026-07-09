@@ -43,15 +43,15 @@ export const LeadershipTeam = () => {
                         </div>
                     </div>
                     <h4 className="font-headline-md text-headline-md text-on-surface text-base">David Chen</h4>
-                    <p class="font-label-caps text-label-caps text-primary mt-1">Chief Technology Officer</p>
+                    <p className="font-label-caps text-label-caps text-primary mt-1">Chief Technology Officer</p>
                 </div>
                 <div className="group">
                     <div className="relative aspect-[4/5] rounded-xl overflow-hidden mb-4 hover-lift">
                         <img alt="Professional Headshot Female" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="An elegant editorial portrait of a female operations executive. The background is a soft-focus architectural glass wall, creating a subtle glassmorphic effect that integrates with the UI style. The lighting is sophisticated and warm-toned, highlighting professional grace and strategic competence. She wears a minimalist business blazer in a deep forest green. The overall visual style is premium and high-contrast, embodying calculated confidence and transparency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYxmbrjl6kn7HKaz6E2M8sAa9pJ5FxzAcS-punBZojHZ6aHLzLGEQ8saEytzqv0tBZ9UDTv74givfaaM3Kb6Gh5jn4znYhCX-1ZpO0SucZPbZNv_0rmeepaLB4rNlZUL0l1naxaxSJNMea4Ztt8HNJ6CjA9FWjMsghBBZPvbCcwThsglqjOK91exJ_eWKbXgN-JTGlIPP2foT32t4F6eJBdenVX24VYrMCDbkwkto0B1gHJYH5ye-ZGHUHYNjOkwVBhyqUAN-d5w" />
                         <div className="absolute bottom-4 left-4 right-4 glass p-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
                             <div className="flex gap-2">
-                                <span class="material-symbols-outlined text-primary text-sm">link</span>
-                                <span class="font-label-caps text-[10px] text-on-surface">LINKEDIN</span>
+                                <span className="material-symbols-outlined text-primary text-sm">link</span>
+                                <span className="font-label-caps text-[10px] text-on-surface">LINKEDIN</span>
                             </div>
                         </div>
                     </div>
