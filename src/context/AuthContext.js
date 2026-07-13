@@ -80,6 +80,19 @@ export const AuthProvider = ({ children }) => {
       if (response?.success && response?.data) {
         const { token: userToken, user: userData } = response.data;
 
+        // Redirect to returnUrl if set (e.g. after being redirected from checkout)
+        const returnUrl = typeof window !== 'undefined' ? localStorage.getItem('auth_return_url') : null;
+
+        if (userData?.role?.toLowerCase() !== 'tenant' && !returnUrl) {
+          const adminPanelUrl = userData?.agency?.dashboard_url || process.env.NEXT_PUBLIC_ADMIN_PANEL_URL || 'http://127.0.0.1:8000/admin';
+          return {
+            success: false,
+            message: 'This portal is for tenants only. Please use the company dashboard.',
+            wrongPortal: true,
+            adminPanelUrl: adminPanelUrl
+          };
+        }
+
         if (typeof window !== 'undefined') {
           localStorage.setItem('token', userToken);
           localStorage.setItem('user', JSON.stringify(userData));
@@ -88,8 +101,6 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         setIsAuthenticated(true);
 
-        // Redirect to returnUrl if set (e.g. after being redirected from checkout)
-        const returnUrl = typeof window !== 'undefined' ? localStorage.getItem('auth_return_url') : null;
         if (returnUrl) {
           localStorage.removeItem('auth_return_url');
           router.push(returnUrl);

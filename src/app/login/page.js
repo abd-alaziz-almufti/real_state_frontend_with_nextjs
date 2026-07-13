@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 
@@ -8,11 +8,23 @@ export default function LoginPage() {
   const { login, loading } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [adminPanelUrl, setAdminPanelUrl] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlReturnUrl = params.get('returnUrl');
+      if (urlReturnUrl) {
+        localStorage.setItem('auth_return_url', urlReturnUrl);
+      }
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (error) setError('');
+    if (adminPanelUrl) setAdminPanelUrl(null);
   };
 
   const handleSubmit = async (e) => {
@@ -24,6 +36,7 @@ export default function LoginPage() {
     const result = await login(formData.email, formData.password);
     if (!result.success) {
       setError(result.message || 'Invalid email or password.');
+      setAdminPanelUrl(result.wrongPortal ? result.adminPanelUrl : null);
     }
   };
 
@@ -160,11 +173,23 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div
-                className="flex items-center gap-3 p-4 rounded-xl text-sm font-medium"
+                className="flex flex-col gap-2 p-4 rounded-xl text-sm font-medium"
                 style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>error</span>
-                {error}
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>error</span>
+                  {error}
+                </div>
+                {adminPanelUrl && (
+                  <a
+                    href={adminPanelUrl}
+                    className="inline-flex items-center gap-1.5 self-start text-xs font-semibold hover:underline"
+                    style={{ color: '#4f46e5' }}
+                  >
+                    Go to Agency Admin Panel
+                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_forward</span>
+                  </a>
+                )}
               </div>
             )}
 

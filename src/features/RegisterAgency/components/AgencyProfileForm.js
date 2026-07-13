@@ -71,6 +71,9 @@ export default function AgencyProfileForm() {
       // Agency created — now auto-login with the admin credentials they just entered.
       // This way the user lands on checkout already authenticated.
       if (returnUrl) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('auth_return_url', returnUrl);
+        }
         const loginResult = await auth.login(formData.email, formData.password);
         if (!loginResult?.success) {
           // Login failed after agency creation (edge case) — redirect anyway so they can log in manually

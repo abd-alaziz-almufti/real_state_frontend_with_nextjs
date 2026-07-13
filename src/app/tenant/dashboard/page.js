@@ -360,7 +360,13 @@ export default function TenantDashboardPage() {
         }
       } catch (e) {
         console.error('Dashboard fetch error:', e);
-        setDataError('Could not connect to the server. Please try again.');
+        // Show the real reason: network failure vs. an actual error message
+        // from the backend (403 role check, 404 no tenant profile, etc.)
+        if (e?.isNetworkError) {
+          setDataError('Could not connect to the server. Please try again.');
+        } else {
+          setDataError(e?.message || 'Failed to load dashboard data.');
+        }
       } finally {
         setDataLoading(false);
       }
