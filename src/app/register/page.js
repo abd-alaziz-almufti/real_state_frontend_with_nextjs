@@ -83,18 +83,18 @@ export default function RegisterPage() {
         setIsSubmitting(false);
         return;
       }
-      
+
       const payload = new FormData();
-      payload.append('name', formData.name);
-      payload.append('admin_name', formData.admin_name);
-      payload.append('email', formData.email);
-      if (formData.agency_email) payload.append('agency_email', formData.agency_email);
+      payload.append('name', formData.name);//Agency name
+      if (formData.admin_name) payload.append('admin_name', formData.admin_name);//Admin name
+      payload.append('email', formData.email);//Admin email
+      if (formData.agency_email) payload.append('agency_email', formData.agency_email);//Agency email
       if (formData.phone) payload.append('phone', formData.phone);
       if (formData.address) payload.append('address', formData.address);
       payload.append('password', formData.password);
       payload.append('password_confirmation', formData.confirmPassword);
       payload.append('with_trial', '0'); // don't create trial subscription here
-      
+
       try {
         const response = await api.post('/agencies', payload, {
           headers: {
@@ -102,7 +102,7 @@ export default function RegisterPage() {
             'Accept': 'application/json',
           },
         });
-        
+
         // Auto login with the newly created admin credentials
         const loginResult = await login(formData.email, formData.password);
         if (!loginResult?.success) {
