@@ -1,10 +1,12 @@
 'use client';
 
-import { usePayments, PaymentsTable } from '@/features/dashboard';
+import { Suspense } from 'react';
+import { usePayments, PaymentsTable, usePaymentCheckout } from '@/features/dashboard';
 import Pagination from '@/components/Pagination';
 
-export default function TenantPaymentsPage() {
-  const { payments, meta, loading, error, changePage } = usePayments();
+function TenantPaymentsContent() {
+  const { payments, meta, loading, error, changePage, refetch } = usePayments();
+  const { handlePay, isProcessing, checkoutError, setCheckoutError } = usePaymentCheckout();
 
   return (
     <div className="p-6 lg:p-8 space-y-6">
@@ -15,15 +17,26 @@ export default function TenantPaymentsPage() {
       </div>
 
       {/* Error State */}
-      {error && (
+      {(error || checkoutError) && (
         <div
           className="flex items-center gap-3 p-4 rounded-xl text-sm font-medium"
           style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>error</span>
-          {error}
+          <span>
+            {error || checkoutError}
+            {checkoutError && (
+              <button 
+                className="ml-2 underline text-red-700 hover:text-red-800" 
+                onClick={() => setCheckoutError(null)}
+              >
+                Dismiss
+              </button>
+            )}
+          </span>
         </div>
       )}
+
 
       {/* Main Content Card */}
       <section
@@ -41,7 +54,11 @@ export default function TenantPaymentsPage() {
             </div>
           ) : (
             <>
-              <PaymentsTable payments={payments} />
+              <PaymentsTable 
+                payments={payments} 
+                onPay={handlePay} 
+                isProcessing={isProcessing} 
+              />
               
               {/* Pagination */}
               {meta && meta.last_page > 1 && (
@@ -54,5 +71,13 @@ export default function TenantPaymentsPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function TenantPaymentsPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-500 animate-pulse">Loading dashboard...</div>}>
+      <TenantPaymentsContent />
+    </Suspense>
   );
 }

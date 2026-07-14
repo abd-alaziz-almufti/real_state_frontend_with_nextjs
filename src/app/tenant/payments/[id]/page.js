@@ -1,20 +1,24 @@
 'use client';
 
-import { usePayment } from '@/features/dashboard';
+import { Suspense } from 'react';
+import { usePayment, usePaymentCheckout } from '@/features/dashboard';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-export default function TenantSinglePaymentPage() {
+function TenantSinglePaymentContent() {
   const params = useParams();
   const id = params?.id;
-  const { payment, loading, error } = usePayment(id);
+  const { payment, loading, error, refetch } = usePayment(id);
+  const { handlePay, isProcessing, checkoutError, setCheckoutError } = usePaymentCheckout();
 
   if (loading) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" style={{ borderWidth: '3px' }} />
-          <p style={{ color: '#64748b' }}>Loading payment details…</p>
+          <p style={{ color: '#64748b' }}>
+            {'Loading payment details…'}
+          </p>
         </div>
       </div>
     );
@@ -35,6 +39,17 @@ export default function TenantSinglePaymentPage() {
     );
   }
 
+  // Handle checkout error banner
+  const renderCheckoutError = checkoutError && (
+    <div className="flex items-center justify-between gap-3 p-4 rounded-xl text-sm font-medium mb-6" style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>
+      <div className="flex items-center gap-3">
+        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>error</span>
+        {checkoutError}
+      </div>
+      <button className="underline text-red-700 hover:text-red-800" onClick={() => setCheckoutError(null)}>Dismiss</button>
+    </div>
+  );
+
   const statusStyle = {
     paid: { bg: '#dcfce7', color: '#16a34a', icon: 'check_circle', label: 'Paid in Full' },
     pending: { bg: '#fef9c3', color: '#ca8a04', icon: 'schedule', label: 'Pending Payment' },
@@ -48,6 +63,7 @@ export default function TenantSinglePaymentPage() {
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
+      {renderCheckoutError}
       {/* Header & Back Link */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -63,23 +79,32 @@ export default function TenantSinglePaymentPage() {
             </span>
           </h1>
         </div>
-        
+
         {payment.status !== 'paid' && (
-          <button className="px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95 flex items-center gap-2" style={{ background: '#4f46e5' }}>
-            <span className="material-symbols-outlined text-sm">credit_card</span>
-            Pay Now
+          <button
+            onClick={() => handlePay(payment.id)}
+            disabled={isProcessing === payment.id}
+            className="px-6 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm transition-all hover:opacity-90 active:scale-95 flex items-center gap-2 disabled:opacity-75"
+            style={{ background: '#4f46e5' }}
+          >
+            {isProcessing === payment.id ? (
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <span className="material-symbols-outlined text-sm">credit_card</span>
+            )}
+            {isProcessing === payment.id ? 'Processing...' : 'Pay Now'}
           </button>
         )}
       </div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
+
         {/* Left Column: Core Financials */}
         <div className="md:col-span-2 space-y-6">
           <section className="rounded-2xl p-6 flex flex-col gap-6" style={{ background: '#fff', border: '1px solid #f1f5f9', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
             <h2 className="text-lg font-bold" style={{ color: '#0f172a' }}>Financial Details</h2>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl" style={{ background: '#f8fafc', border: '1px solid #f1f5f9' }}>
                 <p className="text-sm font-medium mb-1" style={{ color: '#64748b' }}>Total Amount Due</p>
@@ -149,7 +174,7 @@ export default function TenantSinglePaymentPage() {
                 <p className="text-xs" style={{ color: '#64748b' }}>Related to this payment</p>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#94a3b8' }}>Property</p>
@@ -165,7 +190,7 @@ export default function TenantSinglePaymentPage() {
               </div>
             </div>
           </section>
-          
+
           <section className="rounded-2xl p-6 text-center" style={{ background: 'linear-gradient(135deg, #1e1b4b, #312e81)' }}>
             <span className="material-symbols-outlined text-white mb-2" style={{ fontSize: '32px', opacity: 0.8 }}>support_agent</span>
             <h3 className="text-white font-bold mb-1">Need help?</h3>
@@ -178,5 +203,13 @@ export default function TenantSinglePaymentPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function TenantSinglePaymentPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center text-slate-500 animate-pulse">Loading payment details...</div>}>
+      <TenantSinglePaymentContent />
+    </Suspense>
   );
 }

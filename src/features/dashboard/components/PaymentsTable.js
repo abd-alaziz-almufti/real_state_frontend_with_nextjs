@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
-export function PaymentsTable({ payments }) {
+export function PaymentsTable({ payments, onPay, isProcessing }) {
+
   const statusStyle = {
     paid: { bg: '#dcfce7', color: '#16a34a', label: 'Paid' },
     pending: { bg: '#fef9c3', color: '#ca8a04', label: 'Pending' },
@@ -54,7 +55,21 @@ export function PaymentsTable({ payments }) {
                     {s.label}
                   </span>
                 </td>
-                <td className="py-4 px-4 text-right">
+                <td className="py-4 px-4 text-right flex items-center justify-end gap-2">
+                  {p.status !== 'paid' && onPay && (
+                    <button
+                      onClick={() => onPay(p.id)}
+                      disabled={isProcessing === p.id}
+                      className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-sm transition-all hover:bg-indigo-700 disabled:opacity-50"
+                      style={{ background: '#4f46e5' }}
+                    >
+                      {isProcessing === p.id ? (
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        'Pay'
+                      )}
+                    </button>
+                  )}
                   <Link
                     href={`/tenant/payments/${p.id}`}
                     className="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors hover:bg-slate-100"

@@ -18,5 +18,23 @@ export const dashboardApi = {
       console.error(`Error fetching tenant payment ${id}:`, error);
       throw error;
     }
+  },
+  createPaymentSession: async (paymentId) => {
+    try {
+      const response = await api.post('/checkout/payment-session', { payment_id: paymentId });
+      return response;
+    } catch (error) {
+      console.error('Error creating payment session:', error);
+      throw error;
+    }
+  },
+  verifyPaymentSession: async (sessionId) => {
+    try {
+      const response = await api.post('/checkout/verify-payment-session', { session_id: sessionId });
+      return response;
+    } catch (error) {
+      console.error('Error verifying payment session:', error);
+      throw error;
+    }
   }
 };

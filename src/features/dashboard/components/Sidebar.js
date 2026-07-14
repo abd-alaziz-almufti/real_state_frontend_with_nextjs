@@ -5,13 +5,14 @@ import { usePathname } from 'next/navigation';
 
 export function Sidebar({ user, onLogout }) {
   const pathname = usePathname();
-  
+
   const navItems = [
     { id: 'dashboard', href: '/tenant/dashboard', label: 'Dashboard', icon: 'dashboard' },
-    { id: 'payments', href: '/tenant/payments', label: 'Payments', icon: 'payments' },
-    { id: 'properties', href: '/tenant/properties', label: 'Properties', icon: 'apartment' },
-    { id: 'maintenance', href: '/tenant/maintenance', label: 'Maintenance', icon: 'build' },
-    { id: 'documents', href: '/tenant/documents', label: 'Documents', icon: 'description' },
+    { id: 'my-payments', href: '/tenant/payments', label: 'My Payments', icon: 'payments' },
+    { id: 'my-leases', href: '/tenant/leases', label: 'My Leases', icon: 'description' },
+    { id: 'my-properties', href: '/tenant/properties', label: 'My Properties', icon: 'apartment' },
+    // { id: 'maintenance', href: '/tenant/maintenance', label: 'Maintenance', icon: 'build' },
+    { id: 'my-rent-applications', href: '/tenant/rent-application', label: 'My Rent Applications', icon: 'description' },
   ];
 
   return (
