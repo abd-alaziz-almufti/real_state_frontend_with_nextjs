@@ -1,10 +1,6 @@
+import { RentalRequestStatus } from './RentalRequestStatus';
+
 export function RentalRequestsList({ requests }) {
-  const statusStyle = {
-    pending: { bg: '#fef9c3', color: '#ca8a04' },
-    approved: { bg: '#dcfce7', color: '#16a34a' },
-    rejected: { bg: '#fee2e2', color: '#dc2626' },
-    active: { bg: '#dbeafe', color: '#2563eb' },
-  };
 
   if (!requests || requests.length === 0) {
     return (
@@ -18,7 +14,6 @@ export function RentalRequestsList({ requests }) {
   return (
     <div className="space-y-3">
       {requests.map((r) => {
-        const s = statusStyle[r.status] || statusStyle.pending;
         return (
           <div
             key={r.id}
@@ -32,9 +27,7 @@ export function RentalRequestsList({ requests }) {
               <p className="font-semibold text-sm truncate" style={{ color: '#0f172a' }}>{r.title}</p>
               <p className="text-xs truncate" style={{ color: '#94a3b8' }}>{r.unit_name}</p>
             </div>
-            <span className="px-2.5 py-1 rounded-full text-xs font-semibold flex-shrink-0" style={{ background: s.bg, color: s.color }}>
-              {r.status?.charAt(0).toUpperCase() + r.status?.slice(1)}
-            </span>
+            <RentalRequestStatus status={r.status} />
           </div>
         );
       })}

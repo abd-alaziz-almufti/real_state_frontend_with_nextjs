@@ -6,6 +6,8 @@ export * from './components/NextPaymentCard';
 export * from './components/QuickActions';
 export * from './components/PaymentsTable';
 export * from './components/RentalRequestsList';
+export * from './components/RentalRequestsTable';
+export * from './components/RentalRequestStatus';
 
 export * from './api';
 export * from './data';

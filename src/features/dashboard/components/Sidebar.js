@@ -12,7 +12,7 @@ export function Sidebar({ user, onLogout }) {
     { id: 'my-leases', href: '/tenant/leases', label: 'My Leases', icon: 'description' },
     { id: 'my-properties', href: '/tenant/properties', label: 'My Properties', icon: 'apartment' },
     // { id: 'maintenance', href: '/tenant/maintenance', label: 'Maintenance', icon: 'build' },
-    { id: 'my-rent-applications', href: '/tenant/rent-application', label: 'My Rent Applications', icon: 'description' },
+    { id: 'rental-requests', href: '/tenant/rental-requests', label: 'Rental Requests', icon: 'inbox' },
   ];
 
   return (

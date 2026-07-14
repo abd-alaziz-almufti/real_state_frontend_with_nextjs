@@ -10,7 +10,7 @@ export function MobileNav() {
     { id: 'dashboard', href: '/tenant/dashboard', icon: 'dashboard', label: 'Home' },
     { id: 'payments', href: '/tenant/payments', icon: 'payments', label: 'Payments' },
     { id: 'properties', href: '/tenant/properties', icon: 'apartment', label: 'Properties' },
-    { id: 'documents', href: '/tenant/documents', icon: 'description', label: 'Docs' },
+    { id: 'rental-requests', href: '/tenant/rental-requests', icon: 'inbox', label: 'Requests' },
   ];
 
   return (

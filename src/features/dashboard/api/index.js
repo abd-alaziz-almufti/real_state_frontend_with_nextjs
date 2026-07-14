@@ -1,5 +1,7 @@
 import api from '@/lib/axios';
 
+export * from './rentalRequests.api';
+
 export const dashboardApi = {
   fetchTenantPayments: async (page = 1) => {
     try {

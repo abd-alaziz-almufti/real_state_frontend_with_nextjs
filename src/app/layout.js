@@ -4,7 +4,7 @@ import "./globals.css";
 import LayoutShell from "@/components/LayoutShell";
 import { AuthProvider } from "@/context/AuthContext";
 import { BroadcastProvider } from "@/context/BroadcastContext";
-import { Toaster } from 'sonner';
+import { AppToaster } from '@/components/FeedbackToaster';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
             <LayoutShell>
               {children}
             </LayoutShell>
-            <Toaster richColors position="top-right" />
+            <AppToaster />
           </BroadcastProvider>
         </AuthProvider>
       </body>
