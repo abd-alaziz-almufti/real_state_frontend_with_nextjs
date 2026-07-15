@@ -3,39 +3,38 @@
 import { useState, useEffect } from 'react';
 import api from '@/lib/axios';
 import { useAuth } from '@/context/AuthContext';
-import { StatCard, NextPaymentCard, QuickActions, PaymentsTable, RentalRequestsList } from '@/features/dashboard';
+import { StatCard, NextPaymentCard, QuickActions, PaymentsTable, RentalRequestsList, MaintenanceRequestModal } from '@/features/dashboard';
 
 export default function TenantDashboardPage() {
   const { isAuthenticated } = useAuth();
   const [dashboardData, setDashboardData] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState('');
+  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
 
-  // Fetch dashboard data
+  const fetchDashboard = async () => {
+    try {
+      setDataLoading(true);
+      const response = await api.get('tenant/dashboard');
+      if (response.success) {
+        setDashboardData(response.data);
+      } else {
+        setDataError(response.message || 'Failed to load dashboard data.');
+      }
+    } catch (e) {
+      console.error('Dashboard fetch error:', e);
+      if (e?.isNetworkError) {
+        setDataError('Could not connect to the server. Please try again.');
+      } else {
+        setDataError(e?.message || 'Failed to load dashboard data.');
+      }
+    } finally {
+      setDataLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!isAuthenticated) return;
-
-    const fetchDashboard = async () => {
-      try {
-        setDataLoading(true);
-        const response = await api.get('tenant/dashboard');
-        if (response.success) {
-          setDashboardData(response.data);
-        } else {
-          setDataError(response.message || 'Failed to load dashboard data.');
-        }
-      } catch (e) {
-        console.error('Dashboard fetch error:', e);
-        if (e?.isNetworkError) {
-          setDataError('Could not connect to the server. Please try again.');
-        } else {
-          setDataError(e?.message || 'Failed to load dashboard data.');
-        }
-      } finally {
-        setDataLoading(false);
-      }
-    };
-
     fetchDashboard();
   }, [isAuthenticated]);
 
@@ -92,8 +91,16 @@ export default function TenantDashboardPage() {
       {/* Quick Actions */}
       <section>
         <h2 className="text-lg font-bold mb-4" style={{ color: '#0f172a' }}>Quick Actions</h2>
-        <QuickActions />
+        <QuickActions onOpenMaintenance={() => setShowMaintenanceModal(true)} />
       </section>
+
+      {showMaintenanceModal && (
+        <MaintenanceRequestModal
+          leases={leases}
+          onClose={() => setShowMaintenanceModal(false)}
+          onSubmitted={() => fetchDashboard()}
+        />
+      )}
 
       {/* Payments + Rental Requests */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

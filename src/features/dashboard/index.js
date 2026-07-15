@@ -4,6 +4,7 @@ export * from './components/MobileNav';
 export * from './components/StatCard';
 export * from './components/NextPaymentCard';
 export * from './components/QuickActions';
+export * from './components/MaintenanceRequestModal';
 export * from './components/PaymentsTable';
 export * from './components/RentalRequestsList';
 
