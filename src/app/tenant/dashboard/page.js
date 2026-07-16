@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import { useAuth } from '@/context/AuthContext';
-import { StatCard, NextPaymentCard, QuickActions, PaymentsTable, RentalRequestsList, MaintenanceRequestModal } from '@/features/dashboard';
+import { StatCard, NextPaymentCard, QuickActions, PaymentsTable, RentalRequestsList, MaintenanceRequestModal, LeaseDetailModal } from '@/features/dashboard';
 
 export default function TenantDashboardPage() {
   const { isAuthenticated } = useAuth();
@@ -12,6 +12,26 @@ export default function TenantDashboardPage() {
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState('');
   const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
+  const [showLeaseModal, setShowLeaseModal] = useState(false);
+  const [fullLease, setFullLease] = useState(null);
+  const [leaseModalLoading, setLeaseModalLoading] = useState(false);
+  const [leaseModalError, setLeaseModalError] = useState('');
+
+  const openLeaseModal = useCallback(async (leaseId) => {
+    setLeaseModalLoading(true);
+    setLeaseModalError('');
+    setShowLeaseModal(true);
+    try {
+      const res = await api.get(`tenant/leases/${leaseId}`);
+      // LeaseResource wraps response in { data: {...} } — axios interceptor already unwraps response.data
+      setFullLease(res?.data || null);
+    } catch (e) {
+      console.error('Failed to fetch lease detail:', e);
+      setLeaseModalError(e?.message || 'Failed to load lease details.');
+    } finally {
+      setLeaseModalLoading(false);
+    }
+  }, []);
 
   const fetchDashboard = async () => {
     try {
@@ -45,6 +65,8 @@ export default function TenantDashboardPage() {
   const nextPayment = dashboardData?.next_payment_due;
   const activeLeases = leases.filter((l) => l.status === 'active').length;
   const pendingPayments = payments.filter((p) => p.status === 'pending').length;
+  // The most relevant lease to show in the modal — prefer active, else most recent
+  const primaryLease = leases.find((l) => l.status === 'active') || leases[0] || null;
 
   return (
     <div className="p-6 lg:p-8 space-y-6">
@@ -92,7 +114,10 @@ export default function TenantDashboardPage() {
       {/* Quick Actions */}
       <section>
         <h2 className="text-lg font-bold mb-4" style={{ color: '#0f172a' }}>Quick Actions</h2>
-        <QuickActions onOpenMaintenance={() => setShowMaintenanceModal(true)} />
+        <QuickActions
+          onOpenMaintenance={() => setShowMaintenanceModal(true)}
+          onOpenLease={primaryLease ? () => openLeaseModal(primaryLease.id) : null}
+        />
       </section>
 
       {showMaintenanceModal && (
@@ -100,6 +125,15 @@ export default function TenantDashboardPage() {
           leases={leases}
           onClose={() => setShowMaintenanceModal(false)}
           onSubmitted={() => fetchDashboard()}
+        />
+      )}
+
+      {showLeaseModal && (
+        <LeaseDetailModal
+          lease={fullLease}
+          loading={leaseModalLoading}
+          error={leaseModalError}
+          onClose={() => { setShowLeaseModal(false); setFullLease(null); setLeaseModalError(''); }}
         />
       )}
 

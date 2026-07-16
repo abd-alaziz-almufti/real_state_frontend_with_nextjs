@@ -1,7 +1,7 @@
-export function QuickActions({ onOpenMaintenance }) {
+export function QuickActions({ onOpenMaintenance, onOpenLease }) {
   const actions = [
     { icon: 'build', label: 'Submit Maintenance', color: '#f59e0b', bg: '#fffbeb', onClick: onOpenMaintenance },
-    { icon: 'description', label: 'View Lease', color: '#4f46e5', bg: '#eef2ff', onClick: null },
+    { icon: 'description', label: 'View Lease', color: '#4f46e5', bg: '#eef2ff', onClick: onOpenLease || null },
     { icon: 'chat', label: 'Message Manager', color: '#059669', bg: '#ecfdf5', onClick: null },
     { icon: 'receipt_long', label: 'Payment History', color: '#0891b2', bg: '#ecfeff', onClick: null },
   ];
