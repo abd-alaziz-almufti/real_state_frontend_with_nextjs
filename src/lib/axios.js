@@ -8,8 +8,7 @@ import axios from 'axios';
  * - Does NOT auto-redirect on 401 — handled at the component/context level
  */
 const api = axios.create({
-  baseURL: 'http://real-estate-system.test/api/' || 'http://127.0.0.1:8000/api/',
-  // process.env.NEXT_PUBLIC_API_URL ||
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/',
   timeout: 10000,
   withCredentials: false,
   headers: {
