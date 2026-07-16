@@ -11,7 +11,7 @@ export function Sidebar({ user, onLogout }) {
     { id: 'my-payments', href: '/tenant/payments', label: 'My Payments', icon: 'payments' },
     { id: 'my-leases', href: '/tenant/leases', label: 'My Leases', icon: 'description' },
     { id: 'my-properties', href: '/tenant/properties', label: 'My Properties', icon: 'apartment' },
-    // { id: 'maintenance', href: '/tenant/maintenance', label: 'Maintenance', icon: 'build' },
+    { id: 'maintenance', href: '/tenant/maintenance', label: 'Maintenance', icon: 'build' },
     { id: 'rental-requests', href: '/tenant/rental-requests', label: 'Rental Requests', icon: 'inbox' },
   ];
 

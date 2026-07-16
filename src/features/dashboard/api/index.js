@@ -38,5 +38,38 @@ export const dashboardApi = {
       console.error('Error verifying payment session:', error);
       throw error;
     }
+  },
+  submitMaintenanceRequest: async (payload) => {
+    try {
+      const formData = new FormData();
+      formData.append('unit_id', payload.unit_id);
+      formData.append('title', payload.title);
+      formData.append('description', payload.description);
+      formData.append('priority', payload.priority);
+
+      if (payload.images && payload.images.length > 0) {
+        payload.images.forEach((file) => {
+          formData.append('images[]', file);
+        });
+      }
+      const response = await api.post('tenant/maintenance-requests', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error('Error submitting maintenance request:', error);
+      throw error;
+    }
+  },
+  fetchMaintenanceRequests: async (page = 1) => {
+    try {
+      const response = await api.get(`tenant/maintenance-requests?page=${page}`);
+      return response;
+    } catch (error) {
+      console.error('Error fetching maintenance requests:', error);
+      throw error;
+    }
   }
 };
